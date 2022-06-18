@@ -1,3 +1,6 @@
+//flip_bits.c
+//Coding test for GoalZero as supplied by Everett Robinson 6/18/2022
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -39,7 +42,23 @@ void print_bits(void const * const ptr, size_t const size) {
  * @param result - binary value to store the result
  * @return STATUS_CODE - STATUS_SUCCESS if request okay, STATUS_ERROR if out of bounds request
  */
-// TODO: define get_bit function
+bool get_bit (unsigned char *data, unsigned long byte_length, unsigned long bit_offset, bool *result) {
+  //  printf("gh1 %u %u ",byte_length,bit_offset);
+  //  print_bits(data, byte_length);
+  //  printf("\n");
+  if ((bit_offset/8) >= byte_length) {
+    return STATUS_ERROR;
+  }
+  unsigned long i_byte=bit_offset/8;
+  unsigned long b_shift=bit_offset%8;
+  //  printf("gh2 %u %u\n",i_byte,b_shift);
+  if (data[i_byte]&(1<<b_shift)) {
+    *result=1;
+  } else {
+    *result=0;
+  }
+  return STATUS_SUCCESS;
+}
 
 /**
  * @brief Sets the bit at the given offset to 1.
@@ -50,7 +69,15 @@ void print_bits(void const * const ptr, size_t const size) {
  * @param bit_offset - the offset of the bit to set (0 is lsb)
  * @return STATUS_CODE - STATUS_SUCCESS if request okay, STATUS_ERROR if out of bounds request
  */
-// TODO: define set_bit function
+bool set_bit (unsigned char *data, unsigned long byte_length, unsigned long bit_offset) {
+  if ((bit_offset/8) >= byte_length) {
+    return STATUS_ERROR;
+  }
+  unsigned long i_byte=bit_offset/8;
+  unsigned long b_shift=bit_offset%8;
+  data[i_byte] |= 1<<b_shift;
+  return STATUS_SUCCESS;
+}
 
 /**
  * @brief Sets the bit at the given offset to 0.
@@ -61,7 +88,15 @@ void print_bits(void const * const ptr, size_t const size) {
  * @param bit_offset - the offset of the bit to clear (0 is lsb)
  * @return STATUS_CODE - STATUS_SUCCESS if request okay, STATUS_ERROR if out of bounds request
  */
-// TODO: define clear_bit function
+bool clear_bit (unsigned char *data, unsigned long byte_length, unsigned long bit_offset) {
+  if ((bit_offset/8) >= byte_length) {
+    return STATUS_ERROR;
+  }
+  unsigned long i_byte=bit_offset/8;
+  unsigned long b_shift=bit_offset%8;
+  data[i_byte] &= 0xff-(1<<b_shift);
+  return STATUS_SUCCESS;
+}
 
 void get_bit_test() {
   uint8_t pass = 0;
